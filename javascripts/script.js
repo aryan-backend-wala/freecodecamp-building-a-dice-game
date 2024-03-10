@@ -16,6 +16,12 @@ let score = 0;
 let totalScore = 0;
 let round = 1;
 
+const updateScore = (selectedValue, achieved) => {
+  totalScore += parseInt(selectedValue);
+  totalScoreText.textContent = totalScore;
+  scoreHistory.innerHTML += `<li>${achieved}: ${selectedValue}</li>`;
+}
+
 const resetGame = () => {
   currentValuesInDie = [0,0,0,0,0];
   rolls = 0;
@@ -29,6 +35,7 @@ const resetGame = () => {
   updateStatus();
   scoreHistory.innerHTML = "";
   totalScoreText.textContent = totalScore;
+  resetInput();
 }
 
 const updateStatus = () => {
@@ -143,19 +150,24 @@ keepScoreBtn.addEventListener("click", () => {
   let selectedValue;
   let achieved;
 
-  scoreInputs.forEach((input) => {
-    if(input.checked){
-      selectedValue = input.id;
-      achieved = input.value;
+  // scoreInputs.forEach((input) => {
+  //   if(input.checked){
+  //     selectedValue = input.id;
+  //     achieved = input.value;
+  //   }
+  // });
+  for(let radioBtn of scoreInputs){
+    if(radioBtn.checked){
+      selectedValue = radioBtn.value;
+      achieved = radioBtn.id;
+      break;
     }
-  });
+  }
   
   if(selectedValue){
     rolls = 0;
     round++;
-    totalScore += parseInt(achieved);
-    totalScoreText.textContent = totalScore;
-    scoreHistory.innerHTML += `<li>${selectedValue}: ${achieved}</li>`;
+    updateScore(selectedValue, achieved);
     updateStatus();
     resetInput();
     if(round > 6){
